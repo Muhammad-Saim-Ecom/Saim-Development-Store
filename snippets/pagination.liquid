@@ -1,0 +1,19 @@
+{% if pagination.pages > 1 %}
+  <nav role="navigation" class="flex items-center justify-center my-8">
+    {% if pagination.previous %}
+      <a
+        href="{{ pagination.previous.url }}"
+        class="px-8 py-3 mx-1 font-medium text-gray-600 border border-gray-600 rounded-sm hover:bg-gray-600 hover:text-white"
+        >Previous</a
+      >
+    {% endif %}
+
+    {% if pagination.next %}
+      <a
+        href="{{ pagination.next.url }}"
+        class="px-8 py-3 mx-1 font-medium text-gray-600 border border-gray-600 rounded-sm hover:bg-gray-600 hover:text-white"
+        >Next</a
+      >
+    {% endif %}
+  </nav>
+{% endif %}
