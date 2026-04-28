@@ -39,6 +39,23 @@
                   <td class="flex flex-col justify-around px-2 py-4">
                     <a href="{{ item.url }}" class="my-1">{{ item.product.title | truncatewords: 5 }}</a>
                     <span class="my-1 text-gray-500 text-small">{{ item.variant.title }}</span>
+                    {% assign property_size = item.properties | size %}
+                    {% if property_size > 0 %}
+                      <ul class="my-1 text-sm text-gray-600">
+                        {% for p in item.properties %}
+                          {% assign first_char = p.first | slice: 0 %}
+                          {% if first_char == '_' or p.last == blank %}{% continue %}{% endif %}
+                          <li>
+                            <span class="font-medium">{{ p.first }}:</span>
+                            {% if p.last contains '://' %}
+                              <a href="{{ p.last }}" target="_blank" class="text-blue-600 underline break-all">{{ p.last }}</a>
+                            {% else %}
+                              {{ p.last }}
+                            {% endif %}
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
                     <a
                       href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0"
                       class="my-1 text-sm font-medium text-red-500"
