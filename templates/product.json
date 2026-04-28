@@ -20,6 +20,13 @@
           "type": "title",
           "settings": {}
         },
+        "image_upload_H8TDDK": {
+          "type": "image_upload",
+          "settings": {
+            "label": "Upload your image",
+            "upload_endpoint": "https://dimness-passivism-obtain.ngrok-free.dev/upload"
+          }
+        },
         "price": {
           "type": "price",
           "settings": {}
@@ -44,6 +51,7 @@
       "block_order": [
         "vendor",
         "title",
+        "image_upload_H8TDDK",
         "price",
         "variant_selector",
         "quantity",
