@@ -28,7 +28,7 @@
           "type": "image_upload",
           "settings": {
             "label": "Upload your image",
-            "upload_endpoint": ""
+            "upload_endpoint": "https://dimness-passivism-obtain.ngrok-free.dev/upload"
           }
         },
         "variant_selector": {
