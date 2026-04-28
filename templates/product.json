@@ -36,13 +36,6 @@
           "type": "description",
           "settings": {}
         },
-        "image_upload_D6FjtY": {
-          "type": "image_upload",
-          "settings": {
-            "label": "Upload your image",
-            "upload_endpoint": "https://dimness-passivism-obtain.ngrok-free.dev/upload"
-          }
-        },
         "checkout_buttons": {
           "type": "checkout_buttons",
           "settings": {}
@@ -55,7 +48,6 @@
         "variant_selector",
         "quantity",
         "description",
-        "image_upload_D6FjtY",
         "checkout_buttons"
       ],
       "settings": {}
