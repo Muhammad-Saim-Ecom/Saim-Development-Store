@@ -132,6 +132,20 @@
                 <p class="text-gray-700">{{ product.description }}</p>
               </div>
 
+            {% when 'image_upload' %}
+              <div class="my-3" data-image-upload data-upload-endpoint="{{ block.settings.upload_endpoint }}">
+                <label class="block mb-2">{{ block.settings.label }}</label>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  data-image-upload-input
+                  class="block w-full text-sm"
+                >
+                <input type="hidden" name="properties[_engraving_image]" data-image-upload-url>
+                <p class="mt-2 text-sm" data-image-upload-status></p>
+                <img data-image-upload-preview class="hidden mt-3 max-h-48 rounded border">
+              </div>
+
             {% when 'checkout_buttons' %}
               <div class="my-3">
                 <button
@@ -159,6 +173,68 @@
 </div>
 
 <script>
+  document.querySelectorAll('[data-image-upload]').forEach((wrap) => {
+    const endpoint = wrap.dataset.uploadEndpoint;
+    const fileInput = wrap.querySelector('[data-image-upload-input]');
+    const urlInput = wrap.querySelector('[data-image-upload-url]');
+    const status = wrap.querySelector('[data-image-upload-status]');
+    const preview = wrap.querySelector('[data-image-upload-preview]');
+    const form = wrap.closest('form');
+    const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+    let previewUrl = null;
+
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      urlInput.value = '';
+      if (previewUrl) { URL.revokeObjectURL(previewUrl); previewUrl = null; }
+
+      if (!file) {
+        preview.classList.add('hidden');
+        status.textContent = '';
+        return;
+      }
+
+      previewUrl = URL.createObjectURL(file);
+      preview.src = previewUrl;
+      preview.classList.remove('hidden');
+      status.textContent = 'Ready — image will upload when you add to cart.';
+    });
+
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+      const file = fileInput.files[0];
+      if (!file) return;
+      if (urlInput.value) return;
+
+      e.preventDefault();
+
+      if (!endpoint) {
+        status.textContent = 'Upload endpoint not configured.';
+        return;
+      }
+
+      status.textContent = 'Uploading…';
+      if (submitBtn) submitBtn.disabled = true;
+
+      const fd = new FormData();
+      fd.append('image', file);
+
+      try {
+        const res = await fetch(endpoint, { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Upload failed');
+
+        urlInput.value = data.url;
+        status.textContent = 'Uploaded ✓ — adding to cart…';
+        form.submit();
+      } catch (err) {
+        status.textContent = 'Error: ' + err.message;
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+  });
+
   const swiper = new Swiper('.swiper', {
     direction: 'horizontal',
 
@@ -211,6 +287,25 @@
       "type": "checkout_buttons",
       "name": "Checkout Buttons",
       "limit": 1
+    },
+    {
+      "type": "image_upload",
+      "name": "Image Upload",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Field label",
+          "default": "Upload your image"
+        },
+        {
+          "type": "text",
+          "id": "upload_endpoint",
+          "label": "Upload endpoint URL",
+          "info": "The /upload URL of your Heroku app (or ngrok URL for local testing). Example: https://abc123.ngrok-free.app/upload"
+        }
+      ]
     }
   ]
 }
