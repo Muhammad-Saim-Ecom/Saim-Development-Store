@@ -24,6 +24,13 @@
           "type": "price",
           "settings": {}
         },
+        "image_upload_9QcbxQ": {
+          "type": "image_upload",
+          "settings": {
+            "label": "Upload your image",
+            "upload_endpoint": ""
+          }
+        },
         "variant_selector": {
           "type": "variant_selector",
           "settings": {}
@@ -45,6 +52,7 @@
         "vendor",
         "title",
         "price",
+        "image_upload_9QcbxQ",
         "variant_selector",
         "quantity",
         "description",
